@@ -3,16 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Privacy Analyzer</title>
+    <title>Privacy Policy Analyzer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="popup-container">
-        <h2>Privacy Policy Analyzer</h2>
-        <p id="status-message">Click the button below to analyze this page for privacy policies.</p>
-        <button id="analyze" class="analyze-button">Analyze Privacy Policy</button>
-        <div id="output" class="output-box"></div>
+    <div class="container">
+        <h2>Privacy Analyzer</h2>
+        <button id="analyze">Analyze Privacy Policy</button>
+        <div id="output">
+            <p id="message">Click "Analyze" to check if this is a privacy policy page and see a summary with flagged
+                items.</p>
+        </div>
     </div>
     <script src="popup.js"></script>
 </body>

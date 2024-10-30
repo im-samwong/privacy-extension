@@ -1,26 +1,23 @@
 document.getElementById("analyze").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, { message: "check_policy_page" }, (response) => {
-      if (response.isPolicyPage) {
-        analyzePage(tabs[0].id);
-      } else {
-        document.getElementById("status-message").innerText = 
-          "This page does not appear to be a privacy policy page. Analyzing anyway...";
-        analyzePage(tabs[0].id);
+    chrome.scripting.executeScript(
+      { target: { tabId: tabs[0].id }, files: ["content.js"] },
+      () => {
+        chrome.tabs.sendMessage(tabs[0].id, { message: "check_policy" }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error("Error:", chrome.runtime.lastError);
+          } else if (response && response.isPolicyPage) {
+            console.log("Analyzing privacy policy:", response.policyText);
+            chrome.runtime.sendMessage({ message: "analyze", data: response.policyText }, (result) => {
+              console.log("Received result:", result);
+              document.getElementById("output").innerHTML = `<p>${result.summary}</p>`;
+            });
+          } else {
+            console.log("This page doesn’t appear to contain a privacy policy.");
+            document.getElementById("output").innerHTML = `<p class="warning">This page doesn’t appear to contain a privacy policy.</p>`;
+          }
+        });
       }
-    });
+    );
   });
 });
-
-function analyzePage(tabId) {
-  chrome.tabs.sendMessage(tabId, { message: "scrape" }, (response) => {
-    if (response && response.data) {
-      chrome.runtime.sendMessage({ message: "analyze", data: response.data }, (result) => {
-        document.getElementById("output").innerText = result.summary;
-      });
-    } else {
-      document.getElementById("output").innerText = 
-        "Failed to retrieve or analyze content. Please try again.";
-    }
-  });
-}

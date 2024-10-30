@@ -17,14 +17,19 @@ async function analyzePrivacyPolicy(policyText) {
     })
   });
 
-  const result = await response.json();
-  return result.choices[0].message.content;
+  const data = await response.json();
+  return data.choices[0].message.content;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("Received message:", request);
   if (request.message === "analyze") {
+    console.log("Sending response:", summary);
     analyzePrivacyPolicy(request.data).then(summary => {
       sendResponse({ summary });
+    }).catch(error => {
+      console.error("Failed to analyze:", error);
+      sendResponse({ summary: "Error analyzing policy." });
     });
   }
   return true;
