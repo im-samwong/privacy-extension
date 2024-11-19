@@ -22,7 +22,8 @@ h2 {
   color: #555;
 }
 
-.analyze-button {
+.analyze-button,
+.clear-button {
   background-color: #4a90e2;
   color: white;
   border: none;
@@ -33,7 +34,8 @@ h2 {
   margin-bottom: 10px;
 }
 
-.analyze-button:hover {
+.analyze-button:hover,
+.clear-button:hover {
   background-color: #357abd;
 }
 
